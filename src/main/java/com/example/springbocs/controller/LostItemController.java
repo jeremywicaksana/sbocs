@@ -10,6 +10,7 @@ import com.example.springbocs.model.entity.Person;
 import com.example.springbocs.model.type.ActivityType;
 import com.example.springbocs.service.ActivityService;
 import com.example.springbocs.service.LostItemService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +38,8 @@ public class LostItemController {
      * @return list of lostitemdto
      */
     @GetMapping("/all")
+    @Operation(summary="return all of lost items",
+            description = "this endpoint is returning all of the lost items within the lost_item table")
     public List<LostItemDto> getAllItems() {
         return lostItemService.getAllItems().stream()
                 .map(lostItemMapper::lostItemToLostItemDto)
@@ -53,6 +56,9 @@ public class LostItemController {
      * @return
      */
     @PostMapping("/add")
+    @Operation(summary="adding lost item entry",
+            description = "the filename is located in entry directory of main/java of the source code. At the moment," +
+                    "only PDF conversion is supported")
     public void addItemEntry(@RequestParam String fileName) throws IOException {
         ReadFile readFile = new ReadFile();
         List<LostItemDto> entryDtoList = readFile.processFile(fileName);
@@ -80,6 +86,10 @@ public class LostItemController {
      *
      */
     @PostMapping("/claim")
+    @Operation(summary="User claim a lost item",
+            description = "This endpoint will reduce the quantity of the lost item while adding a footprint under activity table" +
+                    "User table is created, but there is only a mock table where it has a hardcoded users with userId" +
+                    "1,2, and 3. It is advised to only use userId that exist in the table to claim the lost item")
     public void claimLostItem(@RequestBody LostItemDto claimedItem, @RequestParam Integer personId) {
         LostItem entry = lostItemMapper.lostItemDtoToLostItem(claimedItem);
         LostItem sourceItem = lostItemService.getLostItem(entry.getName(), entry.getPlace());

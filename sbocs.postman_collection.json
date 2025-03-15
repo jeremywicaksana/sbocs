@@ -1,0 +1,129 @@
+{
+	"info": {
+		"_postman_id": "f2df4be6-d878-46a1-b25b-15aa4479cf63",
+		"name": "sbocs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31516473"
+	},
+	"item": [
+		{
+			"name": "get all lost items",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "add entry to lost item record",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"itemName\": \"car\",\r\n    \"itemLocation\": \"london\",\r\n    // \"itemId\": \"123e4567-e89b-12d3-a456-426614174000\",\r\n    \"itemAmount\": 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/lost-item/entry",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"lost-item",
+						"entry"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "claim lost item",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"itemName\": \"jewels\",\r\n    \"itemLocation\": \"airport\",\r\n    \"itemAmount\": 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/lost-item/claim?personId=1&message=true",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"lost-item",
+						"claim"
+					],
+					"query": [
+						{
+							"key": "personId",
+							"value": "1"
+						},
+						{
+							"key": "message",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "return all user and item based on status",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"itemName\": \"car\",\r\n    \"itemLocation\": \"london\",\r\n    // \"itemId\": \"123e4567-e89b-12d3-a456-426614174000\",\r\n    \"itemAmount\": 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/activity?status=CLAIMED",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"activity"
+					],
+					"query": [
+						{
+							"key": "status",
+							"value": "CLAIMED"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

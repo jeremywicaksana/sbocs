@@ -1,26 +1,36 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+# Intro
+This application is a lost and found simulation. The input of the data entry when losts item are added can be found
+in "src/main/java/com/example/springbocs/entry". The data input from the entry directory then will be stored in an 
+in-memory database H2. Keep in mind everytime the application is booted it will always refresh the database based on
+the DDL script.
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+within this application can be run locally. Currently, there are 4 Rest apis available within this application. Further
+explanation can be found in swagger API after the application is triggered.
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+# Requirements
+- Using any kind of IDE (Intellij recommended)
+- Using JDK version 17
+- ensure maven is installed properly
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+# How to use the application
+1. Try to ensure the java folder under test is marked as test source
+2. ensure java folder under main is marked root source
+3. install all of the dependencies under pom.xml by running 'mvn clean install'
+4. Run the application by running 'mvn spring-boot:run' or run it through IDE GUI
+5. Application is ready to be used.
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+# Sample on how to use
+Once booted, there will be 3 table called activity, lost_item, and person. Person is the only table that is populated
+with a mock user while the rest of the table are empty. Since the table is empty there is a standard directive that could be followed:
+1. Populate the lost_item table with pdf file by triggering '/api/v1/lost-item/add'
+2. the item then can be seen under 'api/v1/lost-item/all'
+3. any user can claim the lost item in 'api/v1/lost-item/claim' endpoint
+4. any claim rest api executed then it will be stored in activity table which can be found in 'api/v1/activity'
 
+There is an example of api collection within the same directory of readme that is called as 'sbocs.postman_collection.json'
+or use Swagger Api.
 
-# Steps
-- Ensure JDK exist with JDK 17 and Java 17 (through env variable)
-- try to install all dependencies by doing 'mvn clean install'
-- run application 'mvn spring-boot:run'
+# References
+- H2 database: http://localhost:<port>/h2-console
+- Swagger API: http://localhost:<port>/swagger-ui/index.html 
+- DDL script: 'src/main/resources/data.sql', This script will always execute whenever the app is booted
