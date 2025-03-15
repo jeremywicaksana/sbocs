@@ -12,7 +12,6 @@ import java.util.UUID;
 @Setter
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "lost_item")
 public class LostItem {
     @Id

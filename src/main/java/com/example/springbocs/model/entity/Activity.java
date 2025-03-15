@@ -4,6 +4,7 @@ import com.example.springbocs.model.type.ActivityType;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -15,6 +16,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 @DynamicUpdate
 @Table(name = "Activity")
 public class Activity {
