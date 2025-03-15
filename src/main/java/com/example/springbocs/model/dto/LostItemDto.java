@@ -8,9 +8,9 @@ import lombok.*;
 import java.util.UUID;
 
 // Getters and Setters explicitly initialized because using lombok @Data, @Getter, and @Setter do not work
-//@Data
-//@Getter
-//@Setter
+@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

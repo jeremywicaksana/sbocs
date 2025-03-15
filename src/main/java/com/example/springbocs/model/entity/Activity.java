@@ -2,19 +2,23 @@ package com.example.springbocs.model.entity;
 
 import com.example.springbocs.model.type.ActivityType;
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.sql.Timestamp;
 import java.util.UUID;
 
 // Getters and Setters explicitly initialized because using lombok @Data, @Getter, and @Setter do not work
-//@Data
-//@Getter
-//@Setter
+@Data
+@Getter
+@Setter
 @Entity
+@DynamicUpdate
 @Table(name = "Activity")
 public class Activity {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
     private UUID id;
 

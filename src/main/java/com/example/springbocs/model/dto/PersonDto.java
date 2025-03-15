@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.*;
 
 @Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

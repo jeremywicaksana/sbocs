@@ -1,16 +1,19 @@
 package com.example.springbocs.controller;
 
 import com.example.springbocs.exception.NegativeLostItemException;
+import com.example.springbocs.helper.ReadFile;
 import com.example.springbocs.mapper.LostItemMapper;
 import com.example.springbocs.model.dto.LostItemDto;
 import com.example.springbocs.model.entity.Activity;
 import com.example.springbocs.model.entity.LostItem;
+import com.example.springbocs.model.entity.Person;
 import com.example.springbocs.model.type.ActivityType;
 import com.example.springbocs.service.ActivityService;
 import com.example.springbocs.service.LostItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -42,31 +45,30 @@ public class LostItemController {
 
     /**
      *  This endpoint will add the item into the lost item entry. If the item already exist it will
-     *  increase the quantity of the item. Otherwise, it will add a new record.
+     *  increase the quantity of the item. Otherwise, it will add a new record. based on the file being introduced
      *
      *  In addition, this endpoint will add history record on the transaction of the lost item
      *
-      * @param entryDto lostItemDto object with id being optional
+      * @param fileName name of the file
      * @return
      */
     @PostMapping("/add")
-    public LostItem addItemEntry(@RequestBody LostItemDto entryDto) {
-        LostItem entry = lostItemMapper.lostItemDtoToLostItem(entryDto);
-        LostItem fetchedItem = lostItemService.getLostItem(entry.getName(), entry.getPlace());
-//        ActivityType activity;
-        if (fetchedItem == null) {
-            UUID rndmUUID = UUID.randomUUID();
-            entry.setId(rndmUUID); //set a random UUID
-            lostItemService.saveLostItem(entry);
-        } else { //if record already exist, add the quantity of the record
-            lostItemService.increaseItemQuantity(fetchedItem.getId(), fetchedItem.getQuantity());
+    public void addItemEntry(@RequestParam String fileName) throws IOException {
+        ReadFile readFile = new ReadFile();
+        List<LostItemDto> entryDtoList = readFile.processFile(fileName);
+
+        for (LostItemDto entryDto : entryDtoList) {
+            LostItem entry = lostItemMapper.lostItemDtoToLostItem(entryDto);
+            LostItem fetchedItem = lostItemService.getLostItem(entry.getName(), entry.getPlace());
+
+            if (fetchedItem == null) {
+                UUID rndmUUID = UUID.randomUUID();
+                entry.setId(rndmUUID); //set a random UUID
+                lostItemService.saveLostItem(entry);
+            } else { //if record already exist, add the quantity of the record
+                lostItemService.increaseItemQuantity(fetchedItem.getId(), entry.getQuantity());
+            }
         }
-
-        //add the activity service while adding/updating record
-        ActivityService activityService = new ActivityService();
-//        Activity
-
-        return entry;
     }
 
     /**
@@ -74,37 +76,43 @@ public class LostItemController {
      * will be decreased.
      *
      * In addition, it will add the history to activity table
-     * @param entryDto lostItemDto object with id being optional
-     * @return
+     * @param claimedItem lostItemDto object with id being optional
+     *
      */
     @PostMapping("/claim")
-    public void claimLostItem(@RequestBody LostItemDto entryDto, @RequestParam Integer personId) {
-        LostItem entry = lostItemMapper.lostItemDtoToLostItem(entryDto);
-        LostItem fetchedItem = lostItemService.getLostItem(entry.getName(), entry.getPlace());
+    public void claimLostItem(@RequestBody LostItemDto claimedItem, @RequestParam Integer personId) {
+        LostItem entry = lostItemMapper.lostItemDtoToLostItem(claimedItem);
+        LostItem sourceItem = lostItemService.getLostItem(entry.getName(), entry.getPlace());
 
         Integer entryAmount = entry.getQuantity();
-        Integer claimAmount = fetchedItem.getQuantity();
+        Integer sourceAmount = sourceItem.getQuantity();
 
-        if (entryAmount < claimAmount) {
+        if (entryAmount > sourceAmount) {
             throw new NegativeLostItemException("Claiming item can't be higher than item amount");
         } else { //if record already exist, add the quantity of the record
-            lostItemService.reduceItemQuantity(fetchedItem.getId(), fetchedItem.getQuantity());
+            lostItemService.reduceItemQuantity(sourceItem.getId(), entry.getQuantity());
         }
 
         //add the activity service while adding/updating record
         Activity activity = new Activity();
+        Person person = new Person();
+        LostItem lostItem = new LostItem();
+
+        //person + lost item
+        person.setId(personId);
+        lostItem.setId(sourceItem.getId());
 
         //additional info for activity
         LocalDateTime curTime = LocalDateTime.now();
         UUID rndmUUID = UUID.randomUUID();
 
         //set all activity variables
-//        activity.setId(rndmUUID);
-//        activity.setActivityType(ActivityType.CLAIMED);
-//        activity.setPerformedOn(Timestamp.valueOf(curTime));
-//        activity.setQuantity(claimAmount);
-//        activity.setItemId(fetchedItem.getId());
-//        activity.setPersonId(personId);
+        activity.setId(rndmUUID);
+        activity.setActivityType(ActivityType.CLAIMED);
+        activity.setPerformedOn(Timestamp.valueOf(curTime));
+        activity.setQuantity(entryAmount);
+        activity.setLostItem(lostItem);
+        activity.setPerson(person);
 
         //save the activity record
         activityService.addActivity(activity);

@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @NoArgsConstructor
-@ResponseStatus(HttpStatus.BAD_REQUEST)
+@ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "claimed item has lower stock")
 public class NegativeLostItemException extends RuntimeException {
 
     public NegativeLostItemException(String message) { super(message); }

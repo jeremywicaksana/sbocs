@@ -2,7 +2,8 @@ package com.example.springbocs.service;
 
 import com.example.springbocs.model.entity.LostItem;
 import com.example.springbocs.repository.LostItemRepo;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,7 +59,7 @@ public class LostItemService {
      * @param id UUID of the item
      * @param quantity amount of item to be added
      */
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void increaseItemQuantity(UUID id, int quantity) {
         lostItemRepo.increaseQuantity(id, quantity);
     }

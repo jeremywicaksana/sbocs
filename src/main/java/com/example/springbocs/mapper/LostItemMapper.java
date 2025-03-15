@@ -18,8 +18,8 @@ public interface LostItemMapper {
     LostItemDto lostItemToLostItemDto(LostItem lostItem);
 
     @Mapping(target = "id", source = "itemId")
-    @Mapping(target = "name", source = "itemName")
+    @Mapping(target = "name", expression = "java(lostItemDto.getItemName().toLowerCase())")
     @Mapping(target = "quantity", source = "itemAmount")
-    @Mapping(target = "place", source = "itemLocation")
+    @Mapping(target = "place", expression = "java(lostItemDto.getItemLocation().toLowerCase())")
     LostItem lostItemDtoToLostItem(LostItemDto lostItemDto);
 }

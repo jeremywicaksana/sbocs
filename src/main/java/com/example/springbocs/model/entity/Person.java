@@ -1,13 +1,16 @@
 package com.example.springbocs.model.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
 // Getters and Setters explicitly initialized because using lombok @Data, @Getter, and @Setter do not work
-//@Data
-//@Getter
-//@Setter
+@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "Person")
 public class Person {
