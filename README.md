@@ -10,7 +10,7 @@ explanation can be found in swagger API after the application is triggered.
 # Requirements
 - Using any kind of IDE (Intellij recommended)
 - Using JDK version 17
-- ensure maven is installed properly
+- ensure maven is installed properly (recommended, using apache-maven-3.9.7)
 
 # How to use the application
 1. Try to ensure the java folder under test is marked as test source
